@@ -6,7 +6,6 @@ RUN apt-get update \
 	&& apt-get install -y build-essential \
 	&& cd /tmp \
 	&& gem install bundler \
-	&& bundle config set deployment true \
 	&& bundle config set without development \
 	&& bundle install \
 	&& apt-get purge -y build-essential \
