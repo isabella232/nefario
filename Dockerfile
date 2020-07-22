@@ -10,7 +10,8 @@ RUN apt-get update \
 	&& bundle install \
 	&& apt-get purge -y build-essential \
 	&& apt-get --purge -y autoremove \
-	&& rm -rf /tmp/* /var/lib/apt/lists/*
+	&& rm -rf /tmp/* /var/lib/apt/lists/* \
+  && mkdir /srv/docker
 
 COPY bin/* /usr/local/bin/
 # Why COPY lib/* /usr/local/lib/ruby/site_ruby/ can't Just Fucking Work
