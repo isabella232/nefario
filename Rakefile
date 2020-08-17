@@ -33,6 +33,7 @@ docker_tag  = ENV["DOCKER_TAG"] || GVB.version
 namespace :docker do
   desc "Build a new docker image"
   task :build do
+    sh "git archive -o nefario.tar.gz HEAD"
     sh "docker build --pull -t #{docker_repo}:#{docker_tag} --build-arg=http_proxy=#{ENV['http_proxy']} --build-arg=NEFARIO_VERSION=#{GVB.version} ."
     ENV["DOCKER_EXTRA_TAGS"].to_s.split(',').each do |tag|
       sh "docker tag #{docker_repo}:#{docker_tag} #{docker_repo}:#{tag}"
