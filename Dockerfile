@@ -3,12 +3,13 @@ FROM ruby:2.6-slim
 COPY Gemfile Gemfile.lock /tmp/
 
 RUN apt-get update \
-	&& apt-get install -y build-essential \
+	&& apt-get install -y build-essential git \
 	&& cd /tmp \
 	&& gem install bundler \
+	&& gem install git-version-bump \
 	&& bundle config set without development \
 	&& bundle install \
-	&& apt-get purge -y build-essential \
+	&& apt-get purge -y build-essential git \
 	&& apt-get --purge -y autoremove \
 	&& rm -rf /tmp/* /var/lib/apt/lists/* \
   && mkdir /srv/docker

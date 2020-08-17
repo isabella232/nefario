@@ -1,7 +1,7 @@
 source 'https://rubygems.org/'
 
 gem "docker-api"
-gem "moby-derp", "~> 0.7"
+gem "moby-derp", git: 'https://github.com/discourse/moby-derp.git'
 gem "frankenstein", "~> 2.0"
 gem "rb-inotify", "~> 0.9"
 gem "service_skeleton", "> 0.0.0.46.a"
