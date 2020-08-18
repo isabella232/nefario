@@ -1,3 +1,4 @@
+require "socket"
 require "service_skeleton"
 
 class Nefario
@@ -7,6 +8,7 @@ class Nefario
   string :DOCKER_CONFIG, default: "~/.docker"
   string :NEFARIO_CONFIG_DIRECTORY
   string :NEFARIO_MOUNT_ROOT, default: "/srv/docker"
+  string :NEFARIO_HOST_HOSTNAME, default: Socket.gethostname
   integer :NEFARIO_IMAGE_REFRESH_INTERVAL, default: 15 * 60
 
   def self.register_ultravisor_children(ultravisor, config:, metrics_registry:)

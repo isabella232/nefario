@@ -37,6 +37,9 @@ variable is required.
 * **`NEFARIO_IMAGE_REFRESH_INTERVAL`**: (default: `900`) The number of seconds
   between attempts to refresh all the images in use by containers.
 
+* **`NEFARIO_HOST_HOSTNAME`**: (default: the actual hostname) The hostname to
+  use when generating container hostnames.
+
 * **`DOCKER_HOST`**: (default: `"unix:///var/run/docker.sock"`) A URL indicating
   the location of the Docker daemon with which Nefario should communicate.
 

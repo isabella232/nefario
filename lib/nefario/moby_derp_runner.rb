@@ -47,7 +47,12 @@ class Nefario::MobyDerpRunner
 
   def system_config
     @system_config ||= begin
-      MobyDerp::SystemConfig.new({ mount_root: @config.mount_root }, Docker.info, logger)
+      opts = {
+        mount_root: @config.mount_root,
+        host_hostname: @config.host_hostname,
+      }
+
+      MobyDerp::SystemConfig.new(opts, Docker.info, logger)
     end
   end
 end
