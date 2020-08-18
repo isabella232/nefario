@@ -14,12 +14,6 @@ RUN apt-get update \
 	&& apt-get --purge -y autoremove \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY bin/* /usr/local/bin/
-# Why COPY lib/* /usr/local/lib/ruby/site_ruby/ can't Just Fucking Work
-# is completely beyond me.
-COPY lib/nefario.rb /usr/local/lib/ruby/site_ruby/
-COPY lib/nefario /usr/local/lib/ruby/site_ruby/nefario/
-
 ARG NEFARIO_VERSION=invalid_build
 ENV NEFARIO_VERSION=$NEFARIO_VERSION
 ENV RUBYLIB=/root/nefario/lib
