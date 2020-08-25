@@ -17,7 +17,7 @@ class Nefario::ConfigDirWatcher
   def run
     notifier = INotify::Notifier.new
     notifier.watch(@config.config_directory, :move, :close_write, :delete) do |event|
-      @metrics.nefario_pending_events_total.set(@inotify_queue.length)
+      @metrics.pending_events_total.set(@inotify_queue.length)
       @inotify_queue << event
     end
 
@@ -71,7 +71,7 @@ class Nefario::ConfigDirWatcher
           break if @inotify_queue.closed?
 
           process_inotify_event(event)
-          @metrics.nefario_pending_events_total.set(@inotify_queue.length)
+          @metrics.pending_events_total.set(@inotify_queue.length)
         rescue => e
           logger.warn(logloc) { "Failed to process inotify event: #{e}" }
         end

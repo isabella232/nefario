@@ -60,7 +60,7 @@ class Nefario::ImageWatcher
 
     changed_pods.uniq!
 
-    @metrics.nefario_pending_refresh_total.set(changed_pods.length)
+    @metrics.pending_refresh_total.set(changed_pods.length)
     i = 0
 
     changed_pods.each do |p|
@@ -68,7 +68,7 @@ class Nefario::ImageWatcher
 
       @ultravisor[:moby_derp_runner].cast.refresh_pod(p)
       i += 1
-      @metrics.nefario_pending_refresh_total.set((changed_pods.length - i))
+      @metrics.pending_refresh_total.set((changed_pods.length - i))
     end
   end
 
