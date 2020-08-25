@@ -11,6 +11,9 @@ class Nefario
   string :NEFARIO_HOST_HOSTNAME, default: Socket.gethostname
   integer :NEFARIO_IMAGE_REFRESH_INTERVAL, default: 15 * 60
 
+  gauge :pending_refresh_total, docstring: "number of pods pending refresh"
+  gauge :pending_events_total, docstring: "number of inotify events left to process"
+
   def self.register_ultravisor_children(ultravisor, config:, metrics_registry:)
     ultravisor.add_child(
       id: :moby_derp_runner,

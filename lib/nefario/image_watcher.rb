@@ -58,10 +58,17 @@ class Nefario::ImageWatcher
       end
     end
 
-    changed_pods.uniq.each do |p|
+    changed_pods.uniq!
+
+    @metrics.pending_refresh_total.set(changed_pods.length)
+    i = 0
+
+    changed_pods.each do |p|
       logger.info(logloc) { "Refreshing pod #{p} due to out-of-date image" }
 
       @ultravisor[:moby_derp_runner].cast.refresh_pod(p)
+      i += 1
+      @metrics.pending_refresh_total.set((changed_pods.length - i))
     end
   end
 

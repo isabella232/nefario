@@ -22,6 +22,14 @@ task :guard do
   sh "guard --clear"
 end
 
+desc "Run sample local nefario"
+task :run_local do
+  $LOAD_PATH.unshift(File.expand_path(".", "lib"))
+  ENV["NEFARIO_CONFIG_DIRECTORY"] = File.expand_path(".", "sample/pods")
+  ENV["NEFARIO_METRICS_PORT"] = "9408"
+  load(File.expand_path(".", "bin/nefario"))
+end
+
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new :test do |t|
   t.pattern = "spec/**/*_spec.rb"

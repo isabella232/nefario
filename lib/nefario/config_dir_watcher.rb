@@ -9,13 +9,18 @@ class Nefario::ConfigDirWatcher
     @logger = @config.logger
 
     @sd_r, @sd_w = IO.pipe
+
+    @inotify_queue = Queue.new
+    @processing_thread = create_processing_thread
   end
 
   def run
     notifier = INotify::Notifier.new
     notifier.watch(@config.config_directory, :move, :close_write, :delete) do |event|
-      process_inotify_event(event)
+      @metrics.pending_events_total.set(@inotify_queue.length)
+      @inotify_queue << event
     end
+
 
     logger.info(logloc) { "Refreshing all pods" }
     Pathname.new(@config.config_directory).each_child do |f|
@@ -47,12 +52,32 @@ class Nefario::ConfigDirWatcher
 
   def shutdown
     logger.debug(logloc) { "Received polite request to shutdown" }
+    @inotify_queue.close
+    @processing_thread.join
     @sd_w.putc("!")
   end
 
   private
 
   attr_reader :logger
+
+  def create_processing_thread
+    Thread.new do
+      while true
+        begin
+
+          break if @inotify_queue.closed?
+          event = @inotify_queue.pop
+          break if @inotify_queue.closed?
+
+          process_inotify_event(event)
+          @metrics.pending_events_total.set(@inotify_queue.length)
+        rescue => e
+          logger.warn(logloc) { "Failed to process inotify event: #{e}" }
+        end
+      end
+    end
+  end
 
   def process_inotify_event(event)
     logger.debug(logloc) { "Processing inotify event: #{event.flags} => #{event.name}" }
