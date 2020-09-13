@@ -6,7 +6,7 @@ class Nefario
 
   url :DOCKER_HOST, default: "unix:///var/run/docker.sock"
   string :DOCKER_CONFIG, default: "~/.docker"
-  string :NEFARIO_CONFIG_DIRECTORY
+  string :NEFARIO_CONFIG_DIRECTORIES
   string :NEFARIO_MOUNT_ROOT, default: "/srv/docker"
   string :NEFARIO_HOST_HOSTNAME, default: Socket.gethostname
   integer :NEFARIO_IMAGE_REFRESH_INTERVAL, default: 15 * 60

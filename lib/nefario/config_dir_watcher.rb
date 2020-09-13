@@ -16,14 +16,13 @@ class Nefario::ConfigDirWatcher
 
   def run
     notifier = INotify::Notifier.new
-    notifier.watch(@config.config_directory, :move, :close_write, :delete) do |event|
+    notifier.watch(@config.config_directories, :move, :close_write, :delete) do |event|
       @metrics.pending_events_total.set(@inotify_queue.length)
       @inotify_queue << event
     end
 
-
     logger.info(logloc) { "Refreshing all pods" }
-    Pathname.new(@config.config_directory).each_child do |f|
+    Pathname.new(@config.config_directories).each_child do |f|
       next unless f.basename.to_s =~ /(\A[^.]|\.yaml\z)/
 
       pod_name = f.basename(".yaml").to_s

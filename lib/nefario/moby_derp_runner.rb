@@ -42,7 +42,7 @@ class Nefario::MobyDerpRunner
   end
 
   def pod_config(name)
-    MobyDerp::PodConfig.new(Pathname.new(@config.config_directory).join("#{name}.yaml"), system_config)
+    MobyDerp::PodConfig.new(Pathname.new(@config.config_directories).join("#{name}.yaml"), system_config)
   end
 
   def system_config
