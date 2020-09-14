@@ -1,0 +1,15 @@
+hostname: testing
+root_labels:
+  test.label: '100'
+expose:
+  - 9998
+  - 9409
+containers:
+  green:
+    image: "debian:latest"
+    command: "/bin/sleep 102"
+    restart: always
+    environment:
+      FOO: bar22
+    labels:
+      inner.label: 'test'

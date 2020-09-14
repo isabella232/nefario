@@ -41,13 +41,18 @@ class Nefario::ImageWatcher
   def refresh_all_images
     image_map = Hash.new { |h, k| h[k] = ImageInfo.new(k, @docker_config, logger) }
 
-    Pathname.new(@config.config_directory).each_child do |podfile|
-      next unless podfile.basename.to_s =~ /(\A[^.]|\.yaml\z)/
+    @config.config_directories.split(",").each do |config_directory|
+      Pathname.new(config_directory).each_child do |podfile|
+        next unless podfile.basename.to_s =~ /(\A[^.]|\.yaml\z)/
 
-      pod_name = podfile.basename(".yaml").to_s
-      cfg = YAML.safe_load(podfile.read)
-      logger.debug(logloc) { "Pod configuration for #{pod_name} is #{cfg.inspect}" }
-      cfg["containers"].values.each { |c| image_map[c["image"]] << pod_name }
+        cfg = YAML.safe_load(podfile.read)
+        logger.debug(logloc) { "Pod configuration for #{podfile} is #{cfg.inspect}" }
+        pod_name = podfile.basename(".yaml").to_s
+
+        cfg["containers"].values.each do |c|
+          image_map[c["image"]] << podfile
+        end
+      end
     end
 
     changed_pods = []

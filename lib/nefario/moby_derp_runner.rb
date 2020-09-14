@@ -16,13 +16,13 @@ class Nefario::MobyDerpRunner
     process_castcall_loop
   end
 
-  def refresh_pod(name)
+  def refresh_pod(path)
+    name = path.basename(".yaml").to_s
     logger.debug(logloc) { "Received request to refresh pod #{name.inspect}" }
-
     validate_pod_name(name)
 
     begin
-      MobyDerp::Pod.new(pod_config(name)).run
+      MobyDerp::Pod.new(pod_config(path)).run
     rescue MobyDerp::Error => ex
       log_exception(ex) { "Exception while derping moby pod #{name}" }
     else
@@ -41,8 +41,8 @@ class Nefario::MobyDerpRunner
     end
   end
 
-  def pod_config(name)
-    MobyDerp::PodConfig.new(Pathname.new(@config.config_directory).join("#{name}.yaml"), system_config)
+  def pod_config(path)
+    MobyDerp::PodConfig.new(path, system_config)
   end
 
   def system_config

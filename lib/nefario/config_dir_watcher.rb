@@ -16,18 +16,23 @@ class Nefario::ConfigDirWatcher
 
   def run
     notifier = INotify::Notifier.new
-    notifier.watch(@config.config_directory, :move, :close_write, :delete) do |event|
-      @metrics.pending_events_total.set(@inotify_queue.length)
-      @inotify_queue << event
+    config_directories = @config.config_directories.split(",")
+
+    config_directories.each do |config_directory|
+      notifier.watch(config_directory, :move, :close_write, :delete) do |event|
+        @metrics.pending_events_total.set(@inotify_queue.length)
+        @inotify_queue << event
+      end
     end
 
 
     logger.info(logloc) { "Refreshing all pods" }
-    Pathname.new(@config.config_directory).each_child do |f|
-      next unless f.basename.to_s =~ /(\A[^.]|\.yaml\z)/
 
-      pod_name = f.basename(".yaml").to_s
-      @ultravisor[:moby_derp_runner].call.refresh_pod(pod_name)
+    config_directories.each do |config_directory|
+      Pathname.new(config_directory).each_child do |f|
+        next unless f.basename.to_s =~ /(\A[^.]|\.yaml\z)/
+        @ultravisor[:moby_derp_runner].call.refresh_pod(f)
+      end
     end
 
     loop do
@@ -87,7 +92,7 @@ class Nefario::ConfigDirWatcher
     if event.flags.include?(:delete) || event.flags.include?(:moved_from)
       pod_deleted(File.basename(event.name, ".yaml"))
     elsif event.flags.include?(:moved_to) || event.flags.include?(:close_write)
-      pod_changed(File.basename(event.name, ".yaml"))
+      pod_changed(Pathname.new(event.absolute_name))
     else
       logger.debug(logloc) { "Ignoring event; no interesting looking flags" }
     end
@@ -105,11 +110,11 @@ class Nefario::ConfigDirWatcher
       .each { |c| logger.debug(logloc) { "Deleting container #{c.id}" }; c.stop; c.delete }
   end
 
-  def pod_changed(pod_name)
-    logger.info(logloc) { "Triggering refresh on #{pod_name}" }
+  def pod_changed(path)
+    logger.info(logloc) { "Triggering refresh on #{path.basename(".yaml")}" }
 
     begin
-      @ultravisor[:moby_derp_runner].call.refresh_pod(pod_name)
+      @ultravisor[:moby_derp_runner].call.refresh_pod(path)
     rescue Ultravisor::ChildExitedError
       retry
     end

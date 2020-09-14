@@ -9,17 +9,13 @@ provided as environment variables, and probably `docker.sock` as a bind mount:
 
 ```
 docker run -v /var/run/docker.sock:/var/run/docker.sock \
-    -e NEFARIO_CONFIG_DIRECTORY=/nefario \
+    -e NEFARIO_CONFIG_DIRECTORIES=/nefario \
     discourse/nefario:latest
 ```
 
 The available configuration environment variables are listed in the "[Configuration](#configuration)" section, below.
 
-Once Nefario is up and running, it will keep an eye on the directory specified by
-`NEFARIO_CONFIG_DIRECTORY`, and any time a file is created or modified in that
-directory that has a `.yaml` extension, it will treat it as a
-[`moby-derp`](https://github.com/mpalmer/moby-derp) pod configuration file, and
-trigger a `moby-derp` run with that configuration.
+Once Nefario is up and running, it will keep an eye on the directoies specified by `NEFARIO_CONFIG_DIRECTORIES`, and any time a file is created or modified in the watched directories that has a `.yaml` extension, it will treat it as a [`moby-derp`](https://github.com/mpalmer/moby-derp) pod configuration file, and trigger a `moby-derp` run with that configuration.
 
 
 ## Configuration
@@ -28,8 +24,7 @@ As per the principles of the [12-factor app](https://12factor.net), Nefario is
 configured entirely via environment variables.  Only the `NEFARIO_CONFIG_DIRECTORY`
 variable is required.
 
-* **`NEFARIO_CONFIG_DIRECTORY`**: the directory to watch for modified
-  configuration files.  This directory must exist before Nefario is started.
+* **`NEFARIO_CONFIG_DIRECTORIES`**: comma seperated string of directories to watch for modified configuration files.  The directories must exist before Nefario is started.
 
 * **`NEFARIO_MOUNT_ROOT`**: (default: `/srv/docker`) The filesystem path where
   all pod volumes should be created.
