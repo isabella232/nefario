@@ -41,7 +41,7 @@ class Nefario::ImageWatcher
   def refresh_all_images
     image_map = Hash.new { |h, k| h[k] = ImageInfo.new(k, @docker_config, logger) }
 
-    @config.config_directories.split(",").each do |config_directory|
+    @config.config_directories.split(":").each do |config_directory|
       Pathname.new(config_directory).each_child do |podfile|
         next unless podfile.basename.to_s =~ /(\A[^.]|\.yaml\z)/
 

@@ -25,7 +25,7 @@ end
 desc "Run sample local nefario"
 task :run_local do
   $LOAD_PATH.unshift(File.expand_path(".", "lib"))
-  ENV["NEFARIO_CONFIG_DIRECTORIES"] = "#{File.expand_path(".", "sample/pods")},#{File.expand_path(".", "sample/pods_2")}"
+  ENV["NEFARIO_CONFIG_DIRECTORIES"] = "#{File.expand_path(".", "sample/pods")}:#{File.expand_path(".", "sample/pods_2")}"
   ENV["NEFARIO_METRICS_PORT"] = "9408"
   load(File.expand_path(".", "bin/nefario"))
 end

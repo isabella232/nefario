@@ -16,7 +16,7 @@ class Nefario::ConfigDirWatcher
 
   def run
     notifier = INotify::Notifier.new
-    config_directories = @config.config_directories.split(",")
+    config_directories = @config.config_directories.split(":")
 
     config_directories.each do |config_directory|
       notifier.watch(config_directory, :move, :close_write, :delete) do |event|

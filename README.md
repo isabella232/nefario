@@ -24,7 +24,7 @@ As per the principles of the [12-factor app](https://12factor.net), Nefario is
 configured entirely via environment variables.  Only the `NEFARIO_CONFIG_DIRECTORY`
 variable is required.
 
-* **`NEFARIO_CONFIG_DIRECTORIES`**: comma seperated string of directories to watch for modified configuration files.  The directories must exist before Nefario is started.
+* **`NEFARIO_CONFIG_DIRECTORIES`**: colon seperated string of directories to watch for modified configuration files.  The directories must exist before Nefario is started.
 
 * **`NEFARIO_MOUNT_ROOT`**: (default: `/srv/docker`) The filesystem path where
   all pod volumes should be created.
