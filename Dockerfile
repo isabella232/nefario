@@ -10,7 +10,7 @@ RUN apt-get update \
 	&& gem install git-version-bump \
 	&& bundle config set without development \
 	&& bundle install \
-	&& apt-get purge -y build-essential git \
+	&& apt-get purge -y build-essential git zlib1g-dev \
 	&& apt-get --purge -y autoremove \
 	&& rm -rf /var/lib/apt/lists/*
 
