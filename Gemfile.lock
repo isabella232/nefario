@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/discourse/moby-derp.git
-  revision: 362d19594ad9e26e6719d598ba91bc1cc18fafb7
+  revision: c598f0901f878f4012d1473341eb34c493c11695
   specs:
-    moby-derp (0.7.2.8.g362d195)
+    moby-derp (0.7.2.10.gc598f09)
       docker-api
       json-canonicalization
 
